@@ -46,6 +46,9 @@ resilience4j:
         sliding-window-size: 10
         sliding-window-type: COUNT_BASED
 
+microservices:
+  product: http://product-service-svc/product/
+  payment: http://payment-service-svc/payment/
 
 #eureka:
 #  instance:

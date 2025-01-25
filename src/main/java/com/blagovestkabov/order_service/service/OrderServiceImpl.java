@@ -13,6 +13,7 @@ import com.blagovestkabov.order_service.model.OrderResponse;
 import com.blagovestkabov.order_service.repository.OrderRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,6 +34,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Value("${microservices.product}")
+    private String productSvcUrl;
+
+    @Value("${microservices.payment}")
+    private String paymentSvcUrl;
 
     @Override
     public long placeOrder(OrderRequest orderRequest) {
@@ -88,10 +95,11 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new CustomException("Order id {" + orderId + "} not found !", "NOT_FOUND", 404));
 
         log.info("Calling product-service to fetch data");
+        log.info("Calling Product Service at URL: {}", productSvcUrl + order.getProductId());
 
         ProductResponse productResponse
                 = restTemplate.getForObject(
-                        "http://PRODUCT-SERVICE/product/" + order.getProductId(),
+                        productSvcUrl + order.getProductId(),
                 ProductResponse.class
         );
 
@@ -105,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
         log.info("Getting payment information form the payment Service");
         PaymentResponse paymentResponse
                 = restTemplate.getForObject(
-                "http://PAYMENT-SERVICE/payment/order/" + order.getId(),
+                paymentSvcUrl + "order/" + order.getId(),
                 PaymentResponse.class
         );
 

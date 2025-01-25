@@ -13,14 +13,17 @@ import com.blagovestkabov.order_service.model.OrderResponse;
 import com.blagovestkabov.order_service.model.PaymentMethod;
 import com.blagovestkabov.order_service.repository.OrderRepository;
 import org.h2.mvstore.type.LongDataType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
@@ -47,6 +50,19 @@ public class OrderServiceImplTest {
     @InjectMocks
     OrderService orderService = new OrderServiceImpl();
 
+    @Value("${microservices.product}")
+    private String productSvcUrl;
+
+    @Value("${microservices.payment}")
+    private String paymentSvcUrl;
+
+    @BeforeEach
+    public void setUp () {
+        ReflectionTestUtils.setField(orderService, "productSvcUrl", productSvcUrl);
+        ReflectionTestUtils.setField(orderService, "paymentSvcUrl", paymentSvcUrl);
+    }
+
+
     @Test
     void testSuccessfulOrder() {
         // 1. Mocking the stuff
@@ -57,9 +73,9 @@ public class OrderServiceImplTest {
 
         Mockito.when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
-        Mockito.when(restTemplate.getForObject("http://PRODUCT-SERVICE/product/" + order.getProductId(), ProductResponse.class)).thenReturn(getMockedProductResponse());
+        Mockito.when(restTemplate.getForObject(productSvcUrl + order.getProductId(), ProductResponse.class)).thenReturn(getMockedProductResponse());
 
-        Mockito.when(restTemplate.getForObject("http://PAYMENT-SERVICE/payment/order/" + order.getId(), PaymentResponse.class)).thenReturn(getMockedPaymentResponse());
+        Mockito.when(restTemplate.getForObject(paymentSvcUrl + "order/" + order.getId(), PaymentResponse.class)).thenReturn(getMockedPaymentResponse());
 
         OrderResponse orderResponse = orderService.getOrderDetails(1);
 
