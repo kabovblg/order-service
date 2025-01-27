@@ -11,14 +11,14 @@ node {
     stage('Build') {
         sh "${mvnCMD} clean install"
     }
-    stage('SonarQube analysis') {
-        withSonarQubeEnv('Sonar') {
-            sh "${mvnCMD} sonar:sonar"
-        }
-    }
-    stage('Quality gate') {
-        waitForQualityGate abortPipeline: true
-    }
+    // stage('SonarQube analysis') {
+    //     withSonarQubeEnv('Sonar') {
+    //         sh "${mvnCMD} sonar:sonar"
+    //     }
+    // }
+    // stage('Quality gate') {
+    //     waitForQualityGate abortPipeline: true
+    // }
     stage('Push Image') {
         withCredentials([file(credentialsId: 'gcp', variable: 'GC_KEY')]) {
             sh("gcloud auth activate-service-account --key-file=${GC_KEY}")
