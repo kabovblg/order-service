@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.5</version>
+		<version>3.1.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.blagovestkabov</groupId>
@@ -27,8 +27,8 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
-		<spring-cloud.version>2023.0.3</spring-cloud.version>
+		<java.version>17</java.version>
+		<spring-cloud.version>2022.0.3</spring-cloud.version>
 	</properties>
 	<dependencies>
 <!--		<dependency>-->
@@ -178,7 +178,7 @@
 				<artifactId>jib-maven-plugin</artifactId>
 				<configuration>
 					<from>
-						<image>openjdk:21</image>
+						<image>openjdk:17</image>
 					</from>
 					<to>
 						<image>${REPO_URL}/orderservice</image>
