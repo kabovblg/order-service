@@ -181,7 +181,7 @@
 						<image>openjdk:21</image>
 					</from>
 					<to>
-						<image>registry.hub.docker.com/kabovblg/orderservice</image>
+						<image>${REPO_URL}/orderservice</image>
 						<tags>${project.version}</tags>
 					</to>
 				</configuration>
